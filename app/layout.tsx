@@ -3,8 +3,9 @@ import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "react-hot-toast";
+import "react-image-crop/dist/ReactCrop.css";
 import "./globals.css";
-import CartCount from "@/components/cart-count";
+import QueryClient from "./query-client";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,10 +32,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Theme>
-          {children}
-          <CartCount />
-        </Theme>
+        <QueryClient>
+          <Theme>{children}</Theme>
+        </QueryClient>
         <Toaster />
       </body>
     </html>

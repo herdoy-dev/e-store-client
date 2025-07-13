@@ -1,20 +1,19 @@
-import { buttonVariants } from "@/components/ui/button";
-import { Flex } from "@radix-ui/themes";
-import Link from "next/link";
-import React from "react";
+import apiClient from "@/lib/apiClient";
+import ApiResponse from "@/schemas/APIResponse";
+import ProductSchema from "@/schemas/Product";
+import ProductActions from "./product-actions";
+import ProductTable from "./product-table";
 
-function Product() {
+export const dynamic = "force-dynamic";
+
+async function Product() {
+  const { data } = await apiClient.get<ApiResponse<ProductSchema[]>>(
+    "/products/my"
+  );
   return (
     <div>
-      <Flex align="center" justify="between">
-        <div></div>
-        <Link
-          className={buttonVariants({ size: "sm" })}
-          href="/dashboard/products/new"
-        >
-          Add New Product
-        </Link>
-      </Flex>
+      <ProductActions />
+      <ProductTable data={data.data} />
     </div>
   );
 }

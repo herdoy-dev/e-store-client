@@ -10,13 +10,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import APIResponse from "@/config/api-response";
 import apiClient from "@/lib/apiClient";
+import APIResponse from "@/schemas/APIResponse";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { BeatLoader } from "react-spinners";
 import { z } from "zod";
 
 const formSchema = z.object({
@@ -28,6 +29,7 @@ type FormData = z.infer<typeof formSchema>;
 
 export default function LoginForm() {
   const [error, setError] = useState("");
+  const [isLoading, setLoading] = useState(false);
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,13 +39,19 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: FormData) => {
+    setLoading(true);
     try {
-      const response = await apiClient.post<APIResponse>("/auth/log-in", data);
+      const response = await apiClient.post<APIResponse<string>>(
+        "/auth/log-in",
+        data
+      );
       setError("");
       toast.success(response.data.message);
       form.reset();
+      setLoading(false);
       window.location.reload();
     } catch (error) {
+      setLoading(false);
       if (error instanceof AxiosError) {
         if (error.response && error.response.data) {
           setError(error.response.data.message);
@@ -88,7 +96,7 @@ export default function LoginForm() {
             )}
           />
           <Button type="submit" className="w-full">
-            Log In
+            {isLoading ? <BeatLoader /> : "Log In"}
           </Button>
         </form>
       </Form>

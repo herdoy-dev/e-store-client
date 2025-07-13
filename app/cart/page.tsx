@@ -1,10 +1,8 @@
-// app/cart/page.tsx
 "use client";
 
 import ContactSection from "@/components/contact-section";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
-import TopPicks from "@/components/top-picks";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,8 +20,18 @@ import Link from "next/link";
 import { useState } from "react";
 import { IoClose } from "react-icons/io5";
 
+interface CartItem {
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+  color: string;
+  size?: string;
+}
+
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState([
+  const [cartItems, setCartItems] = useState<CartItem[]>([
     {
       id: 1,
       name: "Premium Wireless Headphones",
@@ -107,12 +115,13 @@ const CartPage = () => {
                       className="overflow-hidden border border-gray-200 rounded-2xl shadow-lg"
                     >
                       <div className="flex flex-col sm:flex-row">
-                        <div className="relative w-full max-w-[200px] bg-muted">
+                        <div className="relative w-full max-w-[200px] aspect-square bg-muted">
                           <Image
                             src={item.image}
                             alt={item.name}
-                            fill
-                            className="w-full h-full"
+                            width={200}
+                            height={200}
+                            className="object-cover w-full h-full"
                           />
                         </div>
                         <div className="flex-1 p-4">
@@ -150,7 +159,7 @@ const CartPage = () => {
                                 onChange={(e) =>
                                   updateQuantity(
                                     item.id,
-                                    parseInt(e.target.value)
+                                    parseInt(e.target.value) || 1
                                   )
                                 }
                                 className="w-12 h-8 text-center border-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
@@ -216,7 +225,6 @@ const CartPage = () => {
           </div>
         </div>
       </Container>
-      <TopPicks />
       <ContactSection />
       <Footer />
     </>

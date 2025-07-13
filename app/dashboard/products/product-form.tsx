@@ -23,9 +23,12 @@ import { Textarea } from "@/components/ui/textarea";
 import useCategorys from "@/hooks/useCategorys";
 import apiClient from "@/lib/apiClient";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
 import { Plus, Trash } from "lucide-react";
+import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { BeatLoader } from "react-spinners";
 import * as z from "zod";
 
 // Define Zod schema
@@ -51,6 +54,7 @@ type ProductFormValues = z.infer<typeof productFormSchema>;
 
 export default function ProductForm() {
   const { data: categorys } = useCategorys();
+  const [isLoading, setLoading] = useState(false);
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
     defaultValues: {
@@ -73,13 +77,19 @@ export default function ProductForm() {
   });
 
   async function onSubmit(data: ProductFormValues) {
+    setLoading(true);
     try {
       await apiClient.post("/products", data);
       form.reset();
       toast.success("Product created successfully!");
+      setLoading(false);
     } catch (error) {
-      toast.error("Failed to create product");
-      console.error(error);
+      setLoading(false);
+      if (error instanceof AxiosError) {
+        if (error.response && error.response.data) {
+          toast.error(error.response.data.message);
+        }
+      }
     }
   }
 
@@ -308,7 +318,9 @@ export default function ProductForm() {
             <Button type="button" variant="outline">
               Cancel
             </Button>
-            <Button type="submit">Create Product</Button>
+            <Button type="submit">
+              {isLoading ? <BeatLoader /> : "Create Product"}
+            </Button>
           </div>
         </form>
       </Form>

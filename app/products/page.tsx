@@ -1,22 +1,40 @@
 import ContactSection from "@/components/contact-section";
-import Footer from "@/components/footer";
-import Navbar from "@/components/navbar";
-import { Container, Grid } from "@radix-ui/themes";
+import ProductCard from "@/components/product-card";
+import apiClient from "@/lib/apiClient";
+import ApiResponse from "@/schemas/APIResponse";
+import ProductSchema from "@/schemas/Product";
+import { Container, Grid, Heading } from "@radix-ui/themes";
 import Aside from "./aside";
-import Products from "./products";
 
-const ProductPage = () => {
+export const dynamic = "force-dynamic";
+
+const ProductPage = async () => {
+  const { data } = await apiClient.get<ApiResponse<ProductSchema[]>>(
+    "/products"
+  );
+
   return (
     <>
-      <Navbar />
-      <Container className="bg-gray-100">
+      <Container className="bg-gray-50 min-h-screen">
         <Grid columns={{ initial: "1", md: "250px 1fr" }} my="9" gap="6">
           <Aside />
-          <Products />
+          <div className="space-y-6">
+            <Heading as="h1" size="6" weight="bold" className="text-gray-900">
+              Our Products
+            </Heading>
+            <Grid
+              columns={{ initial: "1", sm: "2", md: "3" }}
+              gap="6"
+              className="bg-white p-6 rounded-2xl shadow-sm"
+            >
+              {data.data.map((product) => (
+                <ProductCard key={product._id} product={product} />
+              ))}
+            </Grid>
+          </div>
         </Grid>
       </Container>
       <ContactSection />
-      <Footer />
     </>
   );
 };

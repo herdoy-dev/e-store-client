@@ -9,10 +9,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import APIResponse from "@/config/api-response";
 import useSession from "@/hooks/useSession";
 import apiClient from "@/lib/apiClient";
 import { cn } from "@/lib/utils";
+import APIResponse from "@/schemas/APIResponse";
 import { Container, Skeleton } from "@radix-ui/themes";
 import { AxiosError } from "axios";
 import { ChevronDown, LogOut, Menu, User } from "lucide-react";
@@ -136,9 +136,9 @@ const Navbar: FC = () => {
                       <button
                         onClick={async () => {
                           try {
-                            const { data } = await apiClient.post<APIResponse>(
-                              "/auth/log-out"
-                            );
+                            const { data } = await apiClient.post<
+                              APIResponse<string>
+                            >("/auth/log-out");
                             toast.success(data.message);
                             window.location.reload();
                           } catch (error) {

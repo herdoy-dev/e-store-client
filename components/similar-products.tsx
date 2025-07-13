@@ -4,6 +4,8 @@ import ProductSchema from "@/schemas/Product";
 import { Grid, Heading } from "@radix-ui/themes";
 import ProductCard from "./product-card";
 
+export const dynamic = "force-dynamic";
+
 interface SimilarProductsProps {
   currentProductId: string;
 }

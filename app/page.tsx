@@ -7,6 +7,8 @@ import TopPicks from "@/components/top-picks";
 import Reviews from "@/components/reviews";
 import Navbar from "@/components/navbar";
 
+export const dynamic = "force-dynamic";
+
 export default function LandingPage() {
   return (
     <>

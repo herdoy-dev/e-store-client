@@ -4,6 +4,8 @@ import ProductSchema from "@/schemas/Product";
 import { Container, Grid } from "@radix-ui/themes";
 import ProductCard from "./product-card";
 
+export const dynamic = "force-dynamic";
+
 const FeaturedProducts = async () => {
   const { data } = await apiClient.get<ApiResponse<ProductSchema[]>>(
     "/products"

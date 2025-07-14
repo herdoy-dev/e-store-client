@@ -14,6 +14,7 @@ import apiClient from "@/lib/apiClient";
 import APIResponse from "@/schemas/APIResponse";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
+import Cookies from "js-cookie";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -52,6 +53,7 @@ export default function SignUpForm() {
       setError("");
       toast.success(response.data.message);
       form.reset();
+      Cookies.set("token", response.data.data);
       setLoading(false);
       window.location.reload();
     } catch (error) {

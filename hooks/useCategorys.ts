@@ -1,12 +1,15 @@
 import apiClient from "@/lib/apiClient";
-import { CategoryResponse } from "@/schemas/Category";
+import ApiResponse from "@/schemas/APIResponse";
+import Category from "@/schemas/Category";
 import { useQuery } from "@tanstack/react-query";
 
 const useCategorys = () =>
-  useQuery<CategoryResponse, Error>({
+  useQuery<ApiResponse<Category[]>, Error>({
     queryKey: ["categorys"],
     queryFn: () =>
-      apiClient.get<CategoryResponse>("/categorys").then((res) => res.data),
+      apiClient
+        .get<ApiResponse<Category[]>>("/categorys")
+        .then((res) => res.data),
   });
 
 export default useCategorys;

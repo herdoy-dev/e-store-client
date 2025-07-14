@@ -22,6 +22,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import useCategorys from "@/hooks/useCategorys";
 import apiClient from "@/lib/apiClient";
+import ProductSchema from "@/schemas/Product";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
 import { Plus, Trash } from "lucide-react";
@@ -31,7 +32,7 @@ import toast from "react-hot-toast";
 import { BeatLoader } from "react-spinners";
 import * as z from "zod";
 
-// Define Zod schema
+// Zod validation schema
 const productFormSchema = z.object({
   name: z.string().min(1, "Name is required").max(255),
   thumbnail: z.string().url("Invalid URL").optional(),
@@ -45,25 +46,32 @@ const productFormSchema = z.object({
       })
     )
     .optional(),
-  sizes: z.array(z.string()),
+  sizes: z.array(z.string()).optional(),
   price: z.number().min(0.01, "Price must be greater than 0"),
   category: z.string().min(1, "Category is required"),
 });
 
 type ProductFormValues = z.infer<typeof productFormSchema>;
 
-export default function ProductForm() {
+interface Props {
+  product?: ProductSchema;
+}
+
+export default function ProductForm({ product }: Props) {
   const { data: categorys } = useCategorys();
   const [isLoading, setLoading] = useState(false);
+
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      price: 0,
-      sizes: [],
-      images: [],
-      colors: [],
+      name: product?.name ?? "",
+      description: product?.description ?? "",
+      price: product?.price ?? 0,
+      sizes: product?.sizes ?? [],
+      images: product?.images ?? [],
+      colors: product?.colors ?? [],
+      thumbnail: product?.thumbnail ?? "",
+      category: product?.category._id ?? "",
     },
   });
 
@@ -79,23 +87,30 @@ export default function ProductForm() {
   async function onSubmit(data: ProductFormValues) {
     setLoading(true);
     try {
-      await apiClient.post("/products", data);
-      form.reset();
-      toast.success("Product created successfully!");
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      if (error instanceof AxiosError) {
-        if (error.response && error.response.data) {
-          toast.error(error.response.data.message);
-        }
+      if (product) {
+        await apiClient.put(`/products/${product._id}`, data);
+        toast.success("Product updated successfully!");
+      } else {
+        await apiClient.post("/products", data);
+        form.reset();
+        toast.success("Product created successfully!");
       }
+    } catch (error) {
+      if (error instanceof AxiosError && error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong.");
+      }
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-8">Add New Product</h2>
+      <h2 className="text-2xl font-bold mb-8">
+        {product ? "Edit Product" : "Add New Product"}
+      </h2>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -126,8 +141,7 @@ export default function ProductForm() {
                     <Input
                       type="number"
                       step="0.01"
-                      placeholder="0.00"
-                      {...field}
+                      value={field.value}
                       onChange={(e) =>
                         field.onChange(parseFloat(e.target.value))
                       }
@@ -155,7 +169,7 @@ export default function ProductForm() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {categorys?.result.map((category) => (
+                      {categorys?.data.map((category) => (
                         <SelectItem key={category._id} value={category._id}>
                           {category.name}
                         </SelectItem>
@@ -167,6 +181,7 @@ export default function ProductForm() {
               )}
             />
 
+            {/* Thumbnail */}
             <FormField
               control={form.control}
               name="thumbnail"
@@ -188,6 +203,7 @@ export default function ProductForm() {
               )}
             />
 
+            {/* Images */}
             <div className="md:col-span-2">
               <FormField
                 control={form.control}
@@ -244,14 +260,14 @@ export default function ProductForm() {
                           : "outline"
                       }
                       onClick={() => {
-                        const currentSizes = form.getValues("sizes") || [];
-                        if (currentSizes.includes(size)) {
+                        const current = form.getValues("sizes") || [];
+                        if (current.includes(size)) {
                           form.setValue(
                             "sizes",
-                            currentSizes.filter((s) => s !== size)
+                            current.filter((s) => s !== size)
                           );
                         } else {
-                          form.setValue("sizes", [...currentSizes, size]);
+                          form.setValue("sizes", [...current, size]);
                         }
                       }}
                     >
@@ -318,8 +334,14 @@ export default function ProductForm() {
             <Button type="button" variant="outline">
               Cancel
             </Button>
-            <Button type="submit">
-              {isLoading ? <BeatLoader /> : "Create Product"}
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? (
+                <BeatLoader size={8} />
+              ) : product ? (
+                "Update"
+              ) : (
+                "Create Product"
+              )}
             </Button>
           </div>
         </form>

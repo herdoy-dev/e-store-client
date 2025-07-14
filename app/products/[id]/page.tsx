@@ -7,7 +7,7 @@ import ApiResponse from "@/schemas/APIResponse";
 import ProductSchema from "@/schemas/Product";
 import { Container, Grid, Heading, Text } from "@radix-ui/themes";
 import { ChevronRight, Heart, ShoppingCart, Star } from "lucide-react";
-import Image from "next/image";
+import ProductImages from "./images";
 
 export const dynamic = "force-dynamic";
 
@@ -48,35 +48,8 @@ const ProductDetailsPage = async ({ params }: Props) => {
           className="mb-12"
         >
           {/* Product Images */}
-          <div className="space-y-4">
-            <div className="bg-white p-4 rounded-xl shadow-sm border">
-              <Image
-                src={product.thumbnail}
-                width={800}
-                height={600}
-                alt={product.name}
-                className="w-full h-auto object-contain"
-                priority
-              />
-            </div>
-            <div className="grid grid-cols-4 gap-2">
-              {product.images.map((i) => (
-                <div
-                  key={i}
-                  className="bg-white p-2 rounded-md border cursor-pointer hover:border-primary"
-                >
-                  <Image
-                    src={product.thumbnail}
-                    width={200}
-                    height={200}
-                    alt={`${product.name} thumbnail ${i}`}
-                    className="w-full h-auto object-contain"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
 
+          <ProductImages product={product} />
           {/* Product Info */}
           <div className="space-y-6">
             <div>
@@ -159,25 +132,25 @@ const ProductDetailsPage = async ({ params }: Props) => {
 
             <div className="pt-4 border-t">
               <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
+                <div className="!space-x-2">
                   <Text weight="medium" className="text-gray-500">
                     Availability
                   </Text>
                   <Text>In Stock (24 items)</Text>
                 </div>
-                <div>
+                <div className="!space-x-2">
                   <Text weight="medium" className="text-gray-500">
                     SKU
                   </Text>
                   <Text>PRD-{product._id.slice(0, 8)}</Text>
                 </div>
-                <div>
+                <div className="!space-x-2">
                   <Text weight="medium" className="text-gray-500">
                     Category
                   </Text>
                   <Text>{product.category.name || "Uncategorized"}</Text>
                 </div>
-                <div>
+                <div className="!space-x-2">
                   <Text weight="medium" className="text-gray-500">
                     Shipping
                   </Text>

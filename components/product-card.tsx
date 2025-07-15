@@ -49,7 +49,7 @@ function ProductCard({ product }: Props) {
             className="gap-2 bg-primary hover:bg-primary/90 transition-colors"
             onClick={() =>
               addToCart({
-                _id: product._id,
+                product: product._id,
                 name: product.name,
                 image: product.thumbnail,
                 price: product.price,

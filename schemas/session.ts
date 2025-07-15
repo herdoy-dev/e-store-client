@@ -4,4 +4,8 @@ export default interface Session {
   lastName: string;
   email: string;
   image: string;
+  address: {
+    _id: string;
+    street: string;
+  };
 }

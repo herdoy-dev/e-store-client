@@ -55,19 +55,24 @@ function Aside() {
   const currentPath = usePathname();
   return (
     <div className="h-full flex flex-col justify-between">
-      <div className="p-4 space-y-2">
-        {items.map((item) => (
-          <Link
-            key={item._id}
-            href={item.link}
-            className={cn(
-              "flex items-center gap-3 p-2 rounded hover:bg-primary/10 transition-all cursor-pointer",
-              item.link === currentPath && "bg-primary/20"
-            )}
-          >
-            {item.icon} <span> {item.label} </span>
-          </Link>
-        ))}
+      <div className="h-full flex flex-col">
+        <Link href="/" className="px-6 pt-4">
+          <span className="text-xl font-bold text-primary">MyBrand</span>
+        </Link>
+        <div className="p-4 space-y-2">
+          {items.map((item) => (
+            <Link
+              key={item._id}
+              href={item.link}
+              className={cn(
+                "flex items-center gap-3 p-2 rounded hover:bg-primary/10 transition-all cursor-pointer",
+                item.link === currentPath && "bg-primary/20"
+              )}
+            >
+              {item.icon} <span> {item.label} </span>
+            </Link>
+          ))}
+        </div>
       </div>
       <div className="p-4 space-y-2">
         <Link

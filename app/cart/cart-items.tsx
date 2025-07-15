@@ -19,7 +19,7 @@ function CartItems({ cartItems }: Props) {
     <div className="space-y-6">
       {cartItems.map((item) => (
         <div
-          key={item._id}
+          key={item.product}
           className="overflow-hidden border border-gray-200 rounded-2xl shadow-lg"
         >
           <div className="flex flex-col sm:flex-row">
@@ -38,7 +38,7 @@ function CartItems({ cartItems }: Props) {
                   <h3 className="font-medium">{item.name}</h3>
                 </div>
                 <button
-                  onClick={() => removeItem(item._id)}
+                  onClick={() => removeItem(item.product)}
                   className="text-muted-foreground hover:text-destructive"
                 >
                   <IoClose className="w-4 h-4" />
@@ -52,7 +52,7 @@ function CartItems({ cartItems }: Props) {
                     size="sm"
                     className="h-8 px-2"
                     disabled={item.quantity <= 1}
-                    onClick={() => decQuantity(item._id)}
+                    onClick={() => decQuantity(item.product)}
                   >
                     <Minus />
                   </Button>
@@ -63,7 +63,7 @@ function CartItems({ cartItems }: Props) {
                     size="sm"
                     className="h-8 px-2"
                     disabled={item.quantity >= 10}
-                    onClick={() => incQuantity(item._id)}
+                    onClick={() => incQuantity(item.product)}
                   >
                     <Plus />
                   </Button>

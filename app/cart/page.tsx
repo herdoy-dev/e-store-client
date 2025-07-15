@@ -11,22 +11,66 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import useAddress from "@/hooks/useAddress";
+import apiClient from "@/lib/apiClient";
+import ApiResponse from "@/schemas/APIResponse";
 import { useCartStore } from "@/store";
 import { Container, Grid } from "@radix-ui/themes";
+import { AxiosError } from "axios";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import CartItems from "./cart-items";
 
 const CartPage = () => {
   const cartItems = useCartStore((s) => s.items);
+  const clearCart = useCartStore((s) => s.clearCart);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { data: address } = useAddress();
 
+  // Calculate order totals
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-  const shipping = subtotal > 100 ? 0 : 9.99;
-  const tax = subtotal * 0.08;
-  const total = subtotal + shipping + tax;
+  const shippingFee = subtotal > 100 ? 0 : 9.99;
+  const taxRate = 0.08;
+  const taxAmount = subtotal * taxRate;
+  const orderTotal = subtotal + shippingFee + taxAmount;
+
+  const handlePlaceOrder = async () => {
+    if (!address) {
+      setError("Please set your shipping address before placing an order");
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const orderData = {
+        items: cartItems,
+        shippingAddress: address.data._id,
+      };
+
+      const response = await apiClient.post<ApiResponse<string>>(
+        "/orders",
+        orderData
+      );
+      toast.success(response.data.message);
+      clearCart();
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        setError(err.response?.data?.message || "Failed to place order");
+      } else {
+        setError("An unexpected error occurred");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
@@ -41,7 +85,7 @@ const CartPage = () => {
               </h1>
             </div>
 
-            {cartItems.length === 0 && (
+            {cartItems.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 gap-4">
                 <ShoppingCart className="w-16 h-16 text-muted-foreground" />
                 <h2 className="text-xl font-medium">Your cart is empty</h2>
@@ -52,13 +96,13 @@ const CartPage = () => {
                   <Link href="/products">Continue Shopping</Link>
                 </Button>
               </div>
-            )}
-            {cartItems.length > 0 && (
+            ) : (
               <Grid columns={{ initial: "1", md: "2fr 1fr" }} gap="6">
                 <div className="space-y-6">
                   <CartItems cartItems={cartItems} />
                 </div>
-                <div>
+
+                <div className="space-y-6">
                   <Card>
                     <CardHeader>
                       <CardTitle>Order Summary</CardTitle>
@@ -71,27 +115,58 @@ const CartPage = () => {
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Shipping</span>
                         <span>
-                          {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
+                          {shippingFee === 0
+                            ? "Free"
+                            : `$${shippingFee.toFixed(2)}`}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">Tax</span>
-                        <span>${tax.toFixed(2)}</span>
+                        <span className="text-muted-foreground">Tax (8%)</span>
+                        <span>${taxAmount.toFixed(2)}</span>
                       </div>
                       <Separator />
                       <div className="flex justify-between font-medium text-lg">
                         <span>Total</span>
-                        <span>${total.toFixed(2)}</span>
+                        <span>${orderTotal.toFixed(2)}</span>
                       </div>
                     </CardContent>
                     <CardFooter className="flex flex-col gap-4">
-                      <Button className="w-full" size="lg">
-                        Proceed to Checkout
+                      {error && (
+                        <p className="text-sm text-destructive text-center">
+                          {error}
+                        </p>
+                      )}
+                      <Button
+                        onClick={handlePlaceOrder}
+                        className="w-full"
+                        size="lg"
+                        disabled={isLoading}
+                      >
+                        {isLoading
+                          ? "Processing..."
+                          : "Place Order (Cash on Delivery)"}
                       </Button>
                       <Button variant="outline" className="w-full" asChild>
                         <Link href="/products">Continue Shopping</Link>
                       </Button>
                     </CardFooter>
+                  </Card>
+
+                  <Card className="border border-amber-100 bg-amber-50">
+                    <CardContent className="pt-4">
+                      <div className="flex items-start gap-3">
+                        <div className="mt-0.5">
+                          <ShoppingCart className="w-5 h-5 text-amber-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-medium mb-1">Cash on Delivery</h3>
+                          <p className="text-sm text-muted-foreground">
+                            Pay with cash when your order is delivered. No
+                            online payment required.
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
                   </Card>
                 </div>
               </Grid>

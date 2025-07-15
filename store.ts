@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export interface CartItem {
-  _id: string;
+  product: string;
   name: string;
   image: string;
   price: number;
@@ -16,7 +16,7 @@ interface CartStoreInterface {
   removeItem: (itemId: string) => void;
   incQuantity: (itemId: string) => void;
   decQuantity: (itemId: string) => void;
-  emptyCart: () => void;
+  clearCart: () => void;
 }
 
 export const useCartStore = create<CartStoreInterface>()(
@@ -27,22 +27,22 @@ export const useCartStore = create<CartStoreInterface>()(
       addToCart: (item) =>
         set(({ items }) => {
           toast.success("Product Added");
-          const isPresent = items.find((i) => i._id === item._id);
+          const isPresent = items.find((i) => i.product === item.product);
           if (!isPresent) {
             return { items: [...items, item] };
           }
           const updatedItem = items.map((i) =>
-            i._id === item._id ? { ...i, quantity: i.quantity + 1 } : i
+            i.product === item.product ? { ...i, quantity: i.quantity + 1 } : i
           );
 
           return { items: updatedItem };
         }),
       removeItem: (id) =>
-        set(({ items }) => ({ items: items.filter((i) => i._id !== id) })),
+        set(({ items }) => ({ items: items.filter((i) => i.product !== id) })),
       incQuantity: (id) =>
         set(({ items }) => {
           const updatedItem = items.map((i) =>
-            i._id === id ? { ...i, quantity: i.quantity + 1 } : i
+            i.product === id ? { ...i, quantity: i.quantity + 1 } : i
           );
 
           return { items: updatedItem };
@@ -50,26 +50,14 @@ export const useCartStore = create<CartStoreInterface>()(
       decQuantity: (id) =>
         set(({ items }) => {
           const updatedItem = items.map((i) =>
-            i._id === id ? { ...i, quantity: i.quantity - 1 } : i
+            i.product === id ? { ...i, quantity: i.quantity - 1 } : i
           );
           return { items: updatedItem };
         }),
-      emptyCart: () => set(() => ({ items: [] })),
+      clearCart: () => set(() => ({ items: [] })),
     }),
     {
       name: "cart-sotre",
     }
   )
 );
-
-interface QuantityStoreInterface {
-  quantity: number;
-  incQuantity: () => void;
-  decQuantity: () => void;
-}
-
-export const useQuantigyStore = create<QuantityStoreInterface>((set) => ({
-  quantity: 1,
-  incQuantity: () => set((state) => ({ quantity: state.quantity + 1 })),
-  decQuantity: () => set((state) => ({ quantity: state.quantity - 1 })),
-}));

@@ -128,6 +128,12 @@ const Navbar: FC = () => {
                     </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
+                      <Link href="/profile" className="w-full cursor-pointer">
+                        <User className="mr-2 h-4 w-4" />
+                        Profile
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
                       <Link href="/dashboard" className="w-full cursor-pointer">
                         <User className="mr-2 h-4 w-4" />
                         Dashboard

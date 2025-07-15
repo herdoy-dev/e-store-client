@@ -1,6 +1,5 @@
 "use client";
 
-import ContactSection from "@/components/contact-section";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import { Button } from "@/components/ui/button";
@@ -11,75 +10,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { useCartStore } from "@/store";
 import { Container, Grid } from "@radix-ui/themes";
 import { ShoppingCart } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { IoClose } from "react-icons/io5";
-
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-  color: string;
-  size?: string;
-}
+import CartItems from "./cart-items";
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: "Premium Wireless Headphones",
-      price: 199.99,
-      quantity: 1,
-      image: "/jacket.jpg",
-      color: "Black",
-    },
-    {
-      id: 2,
-      name: "Organic Cotton T-Shirt",
-      price: 29.99,
-      quantity: 2,
-      image: "/couch.jpg",
-      size: "M",
-      color: "White",
-    },
-    {
-      id: 3,
-      name: "Organic Cotton T-Shirt",
-      price: 29.99,
-      quantity: 2,
-      image: "/jacket.jpg",
-      size: "M",
-      color: "White",
-    },
-  ]);
+  const cartItems = useCartStore((s) => s.items);
 
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
   const shipping = subtotal > 100 ? 0 : 9.99;
-  const tax = subtotal * 0.08; // 8% tax
+  const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
-
-  const updateQuantity = (id: number, newQuantity: number) => {
-    if (newQuantity < 1) return;
-    setCartItems(
-      cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
-
-  const removeItem = (id: number) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
-  };
 
   return (
     <>
@@ -109,80 +56,7 @@ const CartPage = () => {
             {cartItems.length > 0 && (
               <Grid columns={{ initial: "1", md: "2fr 1fr" }} gap="6">
                 <div className="space-y-6">
-                  {cartItems.map((item) => (
-                    <div
-                      key={item.id}
-                      className="overflow-hidden border border-gray-200 rounded-2xl shadow-lg"
-                    >
-                      <div className="flex flex-col sm:flex-row">
-                        <div className="relative w-full max-w-[200px] aspect-square bg-muted">
-                          <Image
-                            src={item.image}
-                            alt={item.name}
-                            width={200}
-                            height={200}
-                            className="object-cover w-full h-full"
-                          />
-                        </div>
-                        <div className="flex-1 p-4">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h3 className="font-medium">{item.name}</h3>
-                              <p className="text-muted-foreground text-sm mt-1">
-                                {item.color}
-                                {item.size && ` • ${item.size}`}
-                              </p>
-                            </div>
-                            <button
-                              onClick={() => removeItem(item.id)}
-                              className="text-muted-foreground hover:text-destructive"
-                            >
-                              <IoClose className="w-4 h-4" />
-                            </button>
-                          </div>
-
-                          <div className="flex items-center justify-between mt-4">
-                            <div className="flex items-center border rounded-md">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 px-2"
-                                onClick={() =>
-                                  updateQuantity(item.id, item.quantity - 1)
-                                }
-                              >
-                                -
-                              </Button>
-                              <Input
-                                type="number"
-                                value={item.quantity}
-                                onChange={(e) =>
-                                  updateQuantity(
-                                    item.id,
-                                    parseInt(e.target.value) || 1
-                                  )
-                                }
-                                className="w-12 h-8 text-center border-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                              />
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 px-2"
-                                onClick={() =>
-                                  updateQuantity(item.id, item.quantity + 1)
-                                }
-                              >
-                                +
-                              </Button>
-                            </div>
-                            <p className="font-medium">
-                              ${(item.price * item.quantity).toFixed(2)}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                  <CartItems cartItems={cartItems} />
                 </div>
                 <div>
                   <Card>
@@ -225,7 +99,6 @@ const CartPage = () => {
           </div>
         </div>
       </Container>
-      <ContactSection />
       <Footer />
     </>
   );

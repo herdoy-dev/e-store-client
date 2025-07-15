@@ -1,15 +1,18 @@
+"use client";
 import Product from "@/schemas/Product";
+import { useCartStore } from "@/store";
 import { Flex } from "@radix-ui/themes";
 import { Heart, ShoppingCart } from "lucide-react";
 import Image from "next/image";
-import { Button } from "./ui/button";
 import Link from "next/link";
+import { Button } from "./ui/button";
 
 interface Props {
   product: Product;
 }
 
 function ProductCard({ product }: Props) {
+  const addToCart = useCartStore((s) => s.addToCart);
   return (
     <div className="group relative border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 bg-white">
       <button className="absolute top-3 right-3 z-10 p-2 bg-white/80 rounded-full shadow-sm hover:bg-white transition-all">
@@ -44,6 +47,15 @@ function ProductCard({ product }: Props) {
           <Button
             size="sm"
             className="gap-2 bg-primary hover:bg-primary/90 transition-colors"
+            onClick={() =>
+              addToCart({
+                _id: product._id,
+                name: product.name,
+                image: product.thumbnail,
+                price: product.price,
+                quantity: 1,
+              })
+            }
           >
             <ShoppingCart className="w-4 h-4" />
             Add

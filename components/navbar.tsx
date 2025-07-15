@@ -13,9 +13,10 @@ import useSession from "@/hooks/useSession";
 import apiClient from "@/lib/apiClient";
 import { cn } from "@/lib/utils";
 import APIResponse from "@/schemas/APIResponse";
+import { useCartStore } from "@/store";
 import { Container, Skeleton } from "@radix-ui/themes";
 import { AxiosError } from "axios";
-import { ChevronDown, LogOut, Menu, User } from "lucide-react";
+import { ChevronDown, LogOut, Menu, ShoppingBag, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC } from "react";
@@ -31,6 +32,7 @@ const navItems = [
 const Navbar: FC = () => {
   const pathname = usePathname();
   const { session, loading } = useSession();
+  const cartItems = useCartStore((s) => s.items);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -177,6 +179,15 @@ const Navbar: FC = () => {
                     Sign Up
                   </Link>
                 </div>
+              )}
+
+              {cartItems.length >= 1 && (
+                <Link href="/cart" className="relative">
+                  <ShoppingBag />
+                  <div className="w-5 h-5 flex items-center justify-center text-[10px] rounded-full bg-primary text-white absolute -top-3 -right-3">
+                    {cartItems.length}
+                  </div>
+                </Link>
               )}
             </div>
           )}

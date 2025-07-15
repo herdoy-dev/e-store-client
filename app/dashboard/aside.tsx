@@ -1,6 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import {
+  Grid2x2,
   LayoutGrid,
   Mail,
   NotepadText,
@@ -17,6 +18,12 @@ const items = [
     label: "Dashboard",
     icon: <LayoutGrid size={20} />,
     link: "/dashboard",
+  },
+  {
+    _id: "x",
+    label: "Categorys",
+    icon: <Grid2x2 size={20} />,
+    link: "/dashboard/categorys",
   },
   {
     _id: "b",

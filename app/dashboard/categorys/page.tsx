@@ -10,11 +10,11 @@ async function Categorys() {
   const { data } = await apiClient.get<ApiResponse<Category[]>>("/categorys");
   const categorys = data.data;
   return (
-    <div className="container mx-auto px-4 py-8">
+    <>
       <h1 className="text-3xl font-bold mb-6">Categorys</h1>
       <CategoryActions />
       <CategoryTable categorys={categorys} />
-    </div>
+    </>
   );
 }
 

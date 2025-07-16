@@ -28,7 +28,7 @@ const columns = [
 
 export default function OrderTable({ data }: Props) {
   return (
-    <div className="border rounded-lg overflow-hidden">
+    <div className="overflow-hidden">
       <Table>
         <TableHead columns={columns} />
         <TableBody>

@@ -35,7 +35,7 @@ export default async function ProductPage({ searchParams }: Props) {
   if (!products) return null;
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div>
       <h1 className="text-3xl font-bold mb-6">My Products</h1>
       <ProductActions />
       <ProductTable data={products.data} />

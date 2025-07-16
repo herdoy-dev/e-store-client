@@ -26,9 +26,9 @@ const Navbar: FC = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <Container className="px-4">
-        <div className="flex h-16 items-center justify-between px-4">
-          <div className="flex items-center gap-6">
+      <Container className="pr-4">
+        <div className="flex h-16 items-center justify-between">
+          <div className="flex items-center gap-2">
             <MobileNav />
             <div className="flex items-center gap-10">
               <Link href="/" className="flex items-center gap-2">
@@ -58,12 +58,15 @@ const Navbar: FC = () => {
             <NavUser />
 
             {!session && (
-              <div className="items-center gap-4 md:flex">
+              <div className="items-center md:flex">
                 <Link
-                  className={buttonVariants({
-                    variant: "outline",
-                    size: "sm",
-                  })}
+                  className={cn(
+                    buttonVariants({
+                      variant: "outline",
+                      size: "sm",
+                    }),
+                    "mr-4"
+                  )}
                   href="/log-in"
                 >
                   Log In

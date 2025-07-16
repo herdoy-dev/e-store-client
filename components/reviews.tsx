@@ -45,8 +45,8 @@ const Reviews = () => {
             What Our Customers Say
           </h3>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Don't just take our word for it. Here's what our customers have to
-            say about us.
+            Don&apos;t just take our word for it. Here&apos;s what our customers
+            have to say about us.
           </p>
         </div>
 

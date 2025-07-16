@@ -5,7 +5,13 @@ import Link from "next/link";
 
 function ProductActions() {
   return (
-    <Flex align="center" justify="between" mb="4">
+    <Flex
+      align={{ initial: "start", md: "center" }}
+      justify="between"
+      gap={{ initial: "5", md: "0" }}
+      direction={{ initial: "column", md: "row" }}
+      mb="4"
+    >
       <FilterByName />
       <Link
         className={buttonVariants({ size: "sm" })}

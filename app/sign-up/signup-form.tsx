@@ -78,7 +78,7 @@ export default function SignUpForm() {
               <FormItem>
                 <FormLabel>First Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="John" {...field} />
+                  <Input placeholder="First Name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -91,7 +91,7 @@ export default function SignUpForm() {
               <FormItem>
                 <FormLabel>Last Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Doe" {...field} />
+                  <Input placeholder="Last Name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -104,11 +104,7 @@ export default function SignUpForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="john@example.com"
-                    {...field}
-                  />
+                  <Input type="email" placeholder="Email Address" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -121,7 +117,7 @@ export default function SignUpForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="••••••••" {...field} />
+                  <Input type="password" placeholder="Password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

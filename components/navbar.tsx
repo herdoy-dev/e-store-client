@@ -9,7 +9,6 @@ import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FC } from "react";
 import MobileNav from "./mobile-nav";
 import NavUser from "./nav-user";
 
@@ -20,7 +19,7 @@ const navItems = [
   { name: "Contact", href: "/contact" },
 ];
 
-const Navbar: FC = () => {
+const Navbar = () => {
   const pathname = usePathname();
   const { session, loading } = useSession();
   const cartItems = useCartStore((s) => s.items);
@@ -33,11 +32,11 @@ const Navbar: FC = () => {
             <MobileNav />
             <div className="flex items-center">
               <Link href="/">
-                <Image src="/logo.png" width={140} height={60} alt="logo" />
+                <Image src="/logo.png" width={120} height={60} alt="logo" />
               </Link>
             </div>
 
-            <nav className="hidden items-center space-x-6 md:flex">
+            <nav className="hidden items-center space-x-6 md:flex ms-1">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
@@ -55,48 +54,43 @@ const Navbar: FC = () => {
             </nav>
           </div>
 
-          <div className="flex items-center gap-4">
-            <NavUser />
-
-            {loading && (
-              <div className="flex items-center gap-3">
-                <Skeleton className="w-16 !h-8" />
-                <Skeleton className="w-10 !h-8" />
-              </div>
-            )}
-
-            {!loading && !session && (
-              <div className="items-center md:flex">
-                <Link
-                  className={cn(
-                    buttonVariants({
-                      variant: "outline",
-                      size: "sm",
-                    }),
-                    "mr-4"
-                  )}
-                  href="/log-in"
-                >
-                  Log In
-                </Link>
-                <Link
-                  className={buttonVariants({ size: "sm" })}
-                  href="/sign-up"
-                >
-                  Sign Up
-                </Link>
-              </div>
-            )}
-
-            {cartItems.length >= 1 && (
-              <Link href="/cart" className="relative">
-                <ShoppingBag />
-                <div className="w-5 h-5 flex items-center justify-center text-[10px] rounded-full bg-primary text-white absolute -top-3 -right-3">
-                  {cartItems.length}
+          {!loading ? (
+            <div className="flex gap-3 md:gap-4 items-center">
+              <NavUser />
+              {!session && (
+                <div className="items-center md:flex">
+                  <Link
+                    className={cn(
+                      buttonVariants({
+                        variant: "outline",
+                        size: "sm",
+                      }),
+                      "mr-4"
+                    )}
+                    href="/log-in"
+                  >
+                    Log In
+                  </Link>
+                  <Link
+                    className={buttonVariants({ size: "sm" })}
+                    href="/sign-up"
+                  >
+                    Sign Up
+                  </Link>
                 </div>
-              </Link>
-            )}
-          </div>
+              )}
+              {cartItems.length >= 1 && (
+                <Link href="/cart" className="relative">
+                  <ShoppingBag />
+                  <div className="w-5 h-5 flex items-center justify-center text-[10px] rounded-full bg-primary text-white absolute -top-3 -right-3">
+                    {cartItems.length}
+                  </div>
+                </Link>
+              )}
+            </div>
+          ) : (
+            <Skeleton className="w-16 !h-8" />
+          )}
         </div>
       </Container>
     </header>

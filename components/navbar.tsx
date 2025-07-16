@@ -30,7 +30,7 @@ const Navbar = () => {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center px-2">
             <MobileNav />
-            <div className="flex items-center">
+            <div className="flex items-center lg:mr-5">
               <Link href="/">
                 <Image src="/logo.png" width={120} height={60} alt="logo" />
               </Link>

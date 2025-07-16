@@ -57,8 +57,8 @@ function Aside() {
   return (
     <div className="h-full flex flex-col justify-between">
       <div className="h-full flex flex-col">
-        <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.png" width={140} height={60} alt="logo" />
+        <Link href="/" className="flex items-center gap-2 ps-4 lg:p-4">
+          <Image src="/logo.png" width={120} height={60} alt="logo" />
         </Link>
         <div className="p-4 space-y-2">
           {items.map((item) => (

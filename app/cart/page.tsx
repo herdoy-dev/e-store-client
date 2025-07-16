@@ -19,6 +19,7 @@ import { Container, Grid } from "@radix-ui/themes";
 import { AxiosError } from "axios";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import CartItems from "./cart-items";
@@ -27,6 +28,8 @@ const CartPage = () => {
   const cartItems = useCartStore((s) => s.items);
   const clearCart = useCartStore((s) => s.clearCart);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingP, setIsLoadingP] = useState(false);
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const { data: address } = useAddress();
 
@@ -40,7 +43,7 @@ const CartPage = () => {
   const taxAmount = subtotal * taxRate;
   const orderTotal = subtotal + shippingFee + taxAmount;
 
-  const handlePlaceOrder = async () => {
+  const handleCashOnDeliveryPlaceOrder = async () => {
     if (!address) {
       setError("Please set your shipping address before placing an order");
       return;
@@ -56,11 +59,12 @@ const CartPage = () => {
       };
 
       const response = await apiClient.post<ApiResponse<string>>(
-        "/orders",
+        "/orders/cash-on-delivery",
         orderData
       );
       toast.success(response.data.message);
       clearCart();
+      router.push("/dashboard/orders");
     } catch (err) {
       if (err instanceof AxiosError) {
         setError(err.response?.data?.message || "Failed to place order");
@@ -69,6 +73,37 @@ const CartPage = () => {
       }
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handlePayOnDeliveryPlaceOrder = async () => {
+    if (!address) {
+      setError("Please set your shipping address before placing an order");
+      return;
+    }
+
+    setIsLoadingP(true);
+    setError(null);
+
+    try {
+      const orderData = {
+        items: cartItems,
+        shippingAddress: address.data._id,
+      };
+
+      const response = await apiClient.post(
+        "/orders/pay-on-delivery",
+        orderData
+      );
+      window.location.href = response.data.url;
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        setError(err.response?.data?.message || "Failed to place order");
+      } else {
+        setError("An unexpected error occurred");
+      }
+    } finally {
+      setIsLoadingP(false);
     }
   };
 
@@ -137,7 +172,7 @@ const CartPage = () => {
                         </p>
                       )}
                       <Button
-                        onClick={handlePlaceOrder}
+                        onClick={handleCashOnDeliveryPlaceOrder}
                         className="w-full"
                         size="lg"
                         disabled={isLoading}
@@ -145,6 +180,16 @@ const CartPage = () => {
                         {isLoading
                           ? "Processing..."
                           : "Place Order (Cash on Delivery)"}
+                      </Button>
+                      <Button
+                        onClick={handlePayOnDeliveryPlaceOrder}
+                        className="w-full bg-amber-400 hover:bg-amber-500"
+                        size="lg"
+                        disabled={isLoadingP}
+                      >
+                        {isLoadingP
+                          ? "Processing..."
+                          : "Place Order (Pay on Delivery)"}
                       </Button>
                       <Button variant="outline" className="w-full" asChild>
                         <Link href="/products">Continue Shopping</Link>

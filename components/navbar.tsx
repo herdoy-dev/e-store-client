@@ -4,14 +4,14 @@ import { buttonVariants } from "@/components/ui/button";
 import useSession from "@/hooks/useSession";
 import { cn } from "@/lib/utils";
 import { useCartStore } from "@/store";
-import { Container } from "@radix-ui/themes";
+import { Container, Skeleton } from "@radix-ui/themes";
 import { ShoppingBag } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC } from "react";
 import MobileNav from "./mobile-nav";
 import NavUser from "./nav-user";
-import Image from "next/image";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -22,17 +22,17 @@ const navItems = [
 
 const Navbar: FC = () => {
   const pathname = usePathname();
-  const { session } = useSession();
+  const { session, loading } = useSession();
   const cartItems = useCartStore((s) => s.items);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <Container className="pr-4">
+      <Container className="pr-6">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center px-2">
             <MobileNav />
-            <div className="flex items-center gap-10">
-              <Link href="/" className="flex items-center gap-2">
+            <div className="flex items-center">
+              <Link href="/">
                 <Image src="/logo.png" width={140} height={60} alt="logo" />
               </Link>
             </div>
@@ -58,7 +58,14 @@ const Navbar: FC = () => {
           <div className="flex items-center gap-4">
             <NavUser />
 
-            {!session && (
+            {loading && (
+              <div className="flex items-center gap-3">
+                <Skeleton className="w-16 !h-8" />
+                <Skeleton className="w-10 !h-8" />
+              </div>
+            )}
+
+            {!loading && !session && (
               <div className="items-center md:flex">
                 <Link
                   className={cn(

@@ -21,7 +21,7 @@ export default function MobileNav() {
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            className="flex items-center gap-2 px-2 hover:bg-transparent"
+            className="flex items-center hover:bg-transparent"
           >
             <Menu />
           </Button>

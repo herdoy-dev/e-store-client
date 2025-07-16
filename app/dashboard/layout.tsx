@@ -17,7 +17,7 @@ function Layout({ children }: PropsWithChildren) {
           </div>
           <div className="lg:overflow-y-auto space-y-6">
             <Topbar />
-            <div className="bg-white px-4 py-10">{children}</div>
+            <div className="bg-white px-4 py-6">{children}</div>
           </div>
         </Grid>
       </div>

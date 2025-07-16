@@ -27,21 +27,21 @@ export default async function OrderDetails({ params }: Props) {
   const order = data.data;
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <>
       <div className="flex items-center justify-between mb-6">
         <Link href="/dashboard/orders">
           <Button variant="ghost">
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <ArrowLeft className="w-4 h-4" />
             Back to Orders
           </Button>
         </Link>
         <div className="space-x-2">
           <Button variant="outline">
-            <Printer className="w-4 h-4 mr-2" />
+            <Printer className="w-4 h-4" />
             Print
           </Button>
           <Button>
-            <Edit className="w-4 h-4 mr-2" />
+            <Edit className="w-4 h-4" />
             Edit Order
           </Button>
         </div>
@@ -205,6 +205,6 @@ export default async function OrderDetails({ params }: Props) {
           </Card>
         </div>
       </div>
-    </div>
+    </>
   );
 }

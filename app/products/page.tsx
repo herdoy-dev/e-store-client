@@ -7,6 +7,7 @@ import ProductSchema from "@/schemas/Product";
 import { Container, Grid } from "@radix-ui/themes";
 import FilterByName from "../../components/filter-by-name";
 import Aside from "./aside";
+import { MobileAside } from "./mobile-aside";
 
 export const dynamic = "force-dynamic";
 
@@ -44,9 +45,12 @@ const ProductPage = async ({ searchParams }: Props) => {
       <>
         <Container className="bg-gray-50 min-h-screen">
           <Grid columns={{ initial: "1", md: "250px 1fr" }} my="9" gap="6">
-            <Aside categorys={categories.data} />
+            <div className="hidden lg:block">
+              <Aside categorys={categories.data} />
+            </div>
             <div className="space-y-6">
-              <div className="flex items-center">
+              <div className="flex items-center justify-between px-4">
+                <MobileAside categorys={categories.data} />
                 <div className="max-w-[400px]">
                   <FilterByName />
                 </div>

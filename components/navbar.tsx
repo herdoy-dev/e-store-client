@@ -11,6 +11,7 @@ import { usePathname } from "next/navigation";
 import { FC } from "react";
 import MobileNav from "./mobile-nav";
 import NavUser from "./nav-user";
+import Image from "next/image";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -28,11 +29,11 @@ const Navbar: FC = () => {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <Container className="pr-4">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-6">
             <MobileNav />
             <div className="flex items-center gap-10">
               <Link href="/" className="flex items-center gap-2">
-                <span className="text-xl font-bold text-primary">MyBrand</span>
+                <Image src="/logo.png" width={140} height={60} alt="logo" />
               </Link>
             </div>
 

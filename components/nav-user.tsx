@@ -1,7 +1,6 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,11 +25,8 @@ export default function NavUser() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="flex items-center gap-2 px-2 hover:bg-transparent"
-        >
-          <Avatar className="h-8 w-8">
+        <button className="flex items-center bg-gray-200 rounded-4xl gap-2 pr-2">
+          <Avatar className="h-9 w-9 border-4">
             <AvatarImage src={session.image} alt={session.firstName} />
             <AvatarFallback>
               {session.firstName.charAt(0)}
@@ -38,7 +34,7 @@ export default function NavUser() {
             </AvatarFallback>
           </Avatar>
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
-        </Button>
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <div className="flex items-center gap-2 p-2">

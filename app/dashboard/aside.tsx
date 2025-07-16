@@ -9,6 +9,7 @@ import {
   Settings,
   Users,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -56,8 +57,8 @@ function Aside() {
   return (
     <div className="h-full flex flex-col justify-between">
       <div className="h-full flex flex-col">
-        <Link href="/" className="px-6 pt-4">
-          <span className="text-xl font-bold text-primary">MyBrand</span>
+        <Link href="/" className="flex items-center gap-2">
+          <Image src="/logo.png" width={140} height={60} alt="logo" />
         </Link>
         <div className="p-4 space-y-2">
           {items.map((item) => (

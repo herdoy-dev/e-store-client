@@ -11,7 +11,7 @@ import {
 } from "@/lib/orderStatuses";
 import ApiResponse from "@/schemas/APIResponse";
 import Order from "@/schemas/Order";
-import { ArrowLeft, Edit, Printer } from "lucide-react";
+import { ArrowLeft, Printer } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -35,16 +35,11 @@ export default async function OrderDetails({ params }: Props) {
             Back to Orders
           </Button>
         </Link>
-        <div className="space-x-2">
-          <Button variant="outline">
-            <Printer className="w-4 h-4" />
-            Print
-          </Button>
-          <Button>
-            <Edit className="w-4 h-4" />
-            Edit Order
-          </Button>
-        </div>
+
+        <Button variant="outline">
+          <Printer className="w-4 h-4" />
+          Print
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -1,6 +1,12 @@
 "use client";
+import apiClient from "@/lib/apiClient";
+import ApiResponse from "@/schemas/APIResponse";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { BeatLoader } from "react-spinners";
 import { z } from "zod";
 import { Button } from "./ui/button";
 import {
@@ -15,7 +21,8 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 
 const contactSchema = z.object({
-  name: z.string().min(1, "Name is required"),
+  firstName: z.string().min(1, "Name is required"),
+  lastName: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
   message: z.string().min(5, "Message must be at least 5 characters"),
 });
@@ -23,17 +30,36 @@ const contactSchema = z.object({
 type ContactFormData = z.infer<typeof contactSchema>;
 
 const ContactForm = () => {
+  const [isLoading, setLoading] = useState(false);
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
     defaultValues: {
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
       message: "",
     },
   });
 
-  const onSubmit = (values: ContactFormData) => {
-    console.log("Submitted:", values);
+  const onSubmit = async (values: ContactFormData) => {
+    setLoading(true);
+    try {
+      const { data } = await apiClient.post<ApiResponse<string>>(
+        "/contacts",
+        values
+      );
+      toast.success(data.message);
+      setLoading(false);
+      form.reset();
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response && error.response.data) {
+          toast.error(error.response.data.message);
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -45,12 +71,25 @@ const ContactForm = () => {
         >
           <FormField
             control={form.control}
-            name="name"
+            name="firstName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>First Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Your name" {...field} />
+                  <Input placeholder="First Name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="lastName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Last Name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -85,7 +124,9 @@ const ContactForm = () => {
             )}
           />
 
-          <Button type="submit">Send Message</Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? <BeatLoader /> : "Send Message"}
+          </Button>
         </form>
       </Form>
     </div>

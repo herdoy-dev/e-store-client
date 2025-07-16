@@ -23,6 +23,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import CartItems from "./cart-items";
+import useSession from "@/hooks/useSession";
 
 const CartPage = () => {
   const cartItems = useCartStore((s) => s.items);
@@ -32,6 +33,7 @@ const CartPage = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const { data: address } = useAddress();
+  const { session } = useSession();
 
   // Calculate order totals
   const subtotal = cartItems.reduce(
@@ -44,6 +46,10 @@ const CartPage = () => {
   const orderTotal = subtotal + shippingFee + taxAmount;
 
   const handleCashOnDeliveryPlaceOrder = async () => {
+    if (!session) {
+      return router.push("/log-in");
+    }
+
     if (!address) {
       setError("Please set your shipping address before placing an order");
       return;
@@ -77,6 +83,9 @@ const CartPage = () => {
   };
 
   const handlePayOnDeliveryPlaceOrder = async () => {
+    if (!session) {
+      router.push("/login");
+    }
     if (!address) {
       setError("Please set your shipping address before placing an order");
       return;

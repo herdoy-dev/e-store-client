@@ -9,13 +9,14 @@ function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-300">
       <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-3">
           {/* Company Info */}
           <div className="space-y-4">
             <Image src="/logo.png" alt="logo" width={180} height={30} />
             <p className="text-gray-400">
-              A premium web development agency crafting digital experiences that
-              drive results.
+              Founded in 2015, we&apos;ve grown from a small startup to a
+              leading e-commerce platform by focusing on quality, customer
+              experience, and innovative technology.
             </p>
             <div className="flex gap-4 pt-2">
               <Link
@@ -63,18 +64,18 @@ function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="/services"
+                  href="/"
                   className="text-gray-400 hover:text-white transition-colors"
                 >
-                  Services
+                  Home
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/portfolio"
+                  href="/products"
                   className="text-gray-400 hover:text-white transition-colors"
                 >
-                  Portfolio
+                  Shop
                 </Link>
               </li>
               <li>
@@ -87,65 +88,10 @@ function Footer() {
               </li>
               <li>
                 <Link
-                  href="/blog"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/contact"
                   className="text-gray-400 hover:text-white transition-colors"
                 >
                   Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Services */}
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-white">Services</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/services/web-development"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  Web Development
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services/ecommerce"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  E-Commerce
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services/web-apps"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  Web Applications
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services/cms"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  CMS Development
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services/seo"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  SEO Optimization
                 </Link>
               </li>
             </ul>

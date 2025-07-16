@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import apiClient from "@/lib/apiClient";
 import APIResponse from "@/schemas/APIResponse";
+import { useCartStore } from "@/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
 import Cookies from "js-cookie";
@@ -33,6 +34,7 @@ type FormData = z.infer<typeof formSchema>;
 export default function SignUpForm() {
   const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
+  const cartItems = useCartStore((s) => s.items);
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,14 +57,19 @@ export default function SignUpForm() {
       form.reset();
       Cookies.set("token", response.data.data);
       setLoading(false);
-      window.location.reload();
+      if (cartItems.length >= 1) {
+        window.location.href = "/cart";
+      } else {
+        window.location.reload();
+      }
     } catch (error) {
-      setLoading(false);
       if (error instanceof AxiosError) {
         if (error.response && error.response.data) {
           setError(error.response.data.message);
         }
       }
+    } finally {
+      setLoading(false);
     }
   };
 

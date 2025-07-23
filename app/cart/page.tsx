@@ -1,5 +1,6 @@
 "use client";
 
+import AddressDialog from "@/components/address-dialog";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import useAddress from "@/hooks/useAddress";
+import useSession from "@/hooks/useSession";
 import apiClient from "@/lib/apiClient";
 import ApiResponse from "@/schemas/APIResponse";
 import { useCartStore } from "@/store";
@@ -23,7 +25,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import CartItems from "./cart-items";
-import useSession from "@/hooks/useSession";
 
 const CartPage = () => {
   const cartItems = useCartStore((s) => s.items);
@@ -175,6 +176,7 @@ const CartPage = () => {
                       </div>
                     </CardContent>
                     <CardFooter className="flex flex-col gap-4">
+                      <AddressDialog />
                       {error && (
                         <p className="text-sm text-destructive text-center">
                           {error}

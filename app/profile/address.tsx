@@ -1,9 +1,9 @@
 "use client";
+import AddressDialog from "@/components/address-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useAddress from "@/hooks/useAddress";
 import { useState } from "react";
-import AddressForm from "./address-form";
 
 function Address() {
   const [isEditing, setIsEditing] = useState(false);
@@ -23,7 +23,7 @@ function Address() {
         </CardHeader>
         <CardContent>
           {isEditing ? (
-            <AddressForm initialData={address?.data} />
+            <AddressDialog initialData={address?.data} />
           ) : address ? (
             <div className="space-y-2">
               <p className="font-medium">{address.data.street}</p>

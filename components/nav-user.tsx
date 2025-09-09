@@ -9,10 +9,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import useSession from "@/hooks/useSession";
-import apiClient from "@/lib/apiClient";
-import APIResponse from "@/schemas/APIResponse";
 import { Skeleton } from "@radix-ui/themes";
-import { AxiosError } from "axios";
+import cookie from "js-cookie";
 import { ChevronDown, LogOut, User } from "lucide-react";
 import Link from "next/link";
 
@@ -70,17 +68,12 @@ export default function NavUser() {
           <button
             onClick={async () => {
               try {
-                const { data } = await apiClient.post<APIResponse<string>>(
-                  "/auth/log-out"
-                );
-                toast.success(data.message);
+                cookie.remove("token");
+                toast.success("Log Out Success!");
                 window.location.reload();
               } catch (error) {
-                if (error instanceof AxiosError) {
-                  if (error.response && error.response.data) {
-                    toast.error(error.response.data.message);
-                  }
-                }
+                toast.error("Failed!");
+                console.log(error);
               }
             }}
             className="w-full cursor-pointer"

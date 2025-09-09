@@ -8,7 +8,12 @@ export const dynamic = "force-dynamic";
 
 const FeaturedProducts = async () => {
   const { data } = await apiClient.get<ApiResponse<ProductSchema[]>>(
-    "/products"
+    "/products",
+    {
+      params: {
+        type: "Featured",
+      },
+    }
   );
 
   return (

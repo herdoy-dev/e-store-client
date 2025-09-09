@@ -1,4 +1,5 @@
 import ContactSection from "@/components/contact-section";
+import Pagination from "@/components/pagination.";
 import ProductCard from "@/components/product-card";
 import apiClient from "@/lib/apiClient";
 import ApiResponse from "@/schemas/APIResponse";
@@ -15,6 +16,7 @@ interface Props {
   searchParams: Promise<{
     categoryId: string;
     price: string;
+    page: string;
     name: string;
   }>;
 }
@@ -22,6 +24,8 @@ interface Props {
 const ProductPage = async ({ searchParams }: Props) => {
   const params = await searchParams;
   const categoryId = params.categoryId ? params.categoryId : null;
+  const setPage = parseInt(params.page);
+  const page = setPage ? setPage : null;
   const price = params.price ? parseInt(params.price) : null;
   const search = params.name ? params.name : null;
   try {
@@ -30,6 +34,7 @@ const ProductPage = async ({ searchParams }: Props) => {
         params: {
           categoryId,
           price,
+          page,
           search,
         },
       }),
@@ -64,6 +69,10 @@ const ProductPage = async ({ searchParams }: Props) => {
                   <ProductCard key={product._id} product={product} />
                 ))}
               </Grid>
+              <Pagination
+                currentPage={products.pagination.currentPage}
+                pageCount={products.pagination.totalPages}
+              />
             </div>
           </Grid>
         </Container>

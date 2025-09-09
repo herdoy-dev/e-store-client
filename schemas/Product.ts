@@ -22,6 +22,7 @@ export default interface ProductSchema {
   _id: string;
   name: string;
   thumbnail: string;
+  type: "Featured" | "Regular";
   images: string[];
   description: string;
   colors: ProductColor[];

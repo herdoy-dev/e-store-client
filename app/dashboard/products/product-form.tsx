@@ -47,6 +47,7 @@ const productFormSchema = z.object({
     )
     .optional(),
   sizes: z.array(z.string()).optional(),
+  type: z.string().optional(),
   price: z.number().min(0.01, "Price must be greater than 0"),
   category: z.string().min(1, "Category is required"),
 });
@@ -60,6 +61,7 @@ interface Props {
 export default function ProductForm({ product }: Props) {
   const { data: categorys } = useCategorys();
   const [isLoading, setLoading] = useState(false);
+  const types = ["Featured", "Regular"];
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
@@ -72,6 +74,7 @@ export default function ProductForm({ product }: Props) {
       colors: product?.colors ?? [],
       thumbnail: product?.thumbnail ?? "",
       category: product?.category._id ?? "",
+      type: product?.type ?? "",
     },
   });
 
@@ -94,6 +97,7 @@ export default function ProductForm({ product }: Props) {
         await apiClient.post("/products", data);
         form.reset();
         toast.success("Product created successfully!");
+        console.log(data);
       }
     } catch (error) {
       if (error instanceof AxiosError && error.response?.data?.message) {
@@ -204,25 +208,51 @@ export default function ProductForm({ product }: Props) {
             />
 
             {/* Images */}
-            <div className="md:col-span-2">
-              <FormField
-                control={form.control}
-                name="images"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Images</FormLabel>
+
+            <FormField
+              control={form.control}
+              name="images"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Images</FormLabel>
+                  <FormControl>
+                    <ImagesUploader
+                      images={field.value || []}
+                      onPickImages={(newImages) => field.onChange(newImages)}
+                      maxFiles={4}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Type</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
-                      <ImagesUploader
-                        images={field.value || []}
-                        onPickImages={(newImages) => field.onChange(newImages)}
-                        maxFiles={4}
-                      />
+                      <SelectTrigger>
+                        <SelectValue placeholder="Product Type" />
+                      </SelectTrigger>
                     </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                    <SelectContent>
+                      {types.map((t) => (
+                        <SelectItem key={t} value={t}>
+                          {t}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             {/* Description */}
             <div className="md:col-span-2">

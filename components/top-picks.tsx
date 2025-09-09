@@ -6,7 +6,12 @@ import ProductCard from "./product-card";
 
 const TopPicks = async () => {
   const { data } = await apiClient.get<ApiResponse<ProductSchema[]>>(
-    "/products"
+    "/products",
+    {
+      params: {
+        type: "Regular",
+      },
+    }
   );
 
   return (
